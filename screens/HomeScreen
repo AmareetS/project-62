@@ -1,0 +1,59 @@
+import * as React from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import AppHeader from '../components/AppHeader';
+import db from "../config";
+export default class HomeScreen extends React.Component {
+  constructor(){super()
+  this.state={
+    Sammy= true;
+    Susan= true;
+  }}
+    goToSummaryScreen = (attendance) => {
+    var studentRef=db.ref('student /'+ attendance)
+    studentRef.update({enabled:false})
+    this.props.navigation.navigate('SummaryScreen', { color: attendance });
+  };
+  componentDidMount(){
+    var classref=db.ref('student')
+    studentref.on("value",data=>{
+      var studentdetails= data.val()
+      this.setState({
+        Susanstatus:studentdetails.Susan.enabled,
+        Sammystatus:studentdetails.Sammy.enabled,
+      })
+    })
+  }
+  render() {
+    return (
+      <View>
+        <AppHeader />
+
+        <TouchableOpacity
+        disabled={this.state.Sammystatus}
+          style={[styles.button, { backgroundColor: 'black' }]}
+          onPress={() => {
+            this.goToSummaryScreen('Sammy');
+          }}>
+          <Text style={styles.buttonText}>Sammy 1</Text>
+          <Text> Marked as present</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  button: {
+    justifyContent: 'center',
+    alignSelf: 'center',
+    borderWidth: 2,
+    borderRadius: 15,
+    marginTop: 50,
+    width: 200,
+    height: 50,
+  },
+  buttonText: {
+    textAlign: 'center',
+    color: 'white',
+  },
+});
